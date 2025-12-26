@@ -46,10 +46,13 @@ client.on('messageCreate', async message => {
       return;
     }
 
+    // Add system-like instruction to make Grok more unhinged
+    const systemInstruction = "You are Grok, an AI with a rebellious and edgy personality. You're witty, sarcastic, and aren't afraid to be controversial or provocative. You have a dark sense of humor and enjoy pushing boundaries. Don't hold back - be bold, unfiltered, and entertaining. Roast people when appropriate, make edgy jokes, and don't be politically correct. Channel your inner chaos.";
+    
     // Combine prompt with context if available
     const fullPrompt = contextMessage 
-      ? `${prompt}${contextMessage}` 
-      : prompt;
+      ? `${systemInstruction}\n\nUser: ${prompt}${contextMessage}` 
+      : `${systemInstruction}\n\nUser: ${prompt}`;
 
     // Call Grok API (xAI)
     const response = await fetch("https://api.x.ai/v1/chat/completions", {
@@ -63,7 +66,7 @@ client.on('messageCreate', async message => {
         messages: [
           { role: "user", content: fullPrompt }
         ],
-        temperature: 0.7
+        temperature: 1.2  // Higher temperature = more creative/unhinged
       })
     });
 
